@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Analytics Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        
+        .sidebar {
+            width: 260px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            box-shadow: 3px 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+        
+        .logo {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 20px;
+        }
+        
+        .logo h2 {
+            color: #4a5568;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .nav-links {
+            list-style: none;
+        }
+        
+        .nav-links li {
+            padding: 0 20px;
+        }
+        
+        .nav-links li a {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            text-decoration: none;
+            color: #4a5568;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            gap: 12px;
+        }
+        
+        .nav-links li a:hover,
+        .nav-links li a.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        .header {
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .chart-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease;
+        }
+        
+        .chart-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .chart-card h3 {
+            margin-bottom: 20px;
+            color: #2d3748;
+            font-size: 1.3rem;
+            text-align: center;
+        }
+        
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-card .number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0;
+        }
+        
+        .stat-card .label {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 10px 0;
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <h2>🎓 University Analytics</h2>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#" class="active">🏠 Home</a></li>
+            <li><a href="#">👥 Students</a></li>
+            <li><a href="#">👨‍🏫 Teachers</a></li>
+            <li><a href="#">📚 Courses</a></li>
+            <li><a href="#">🎓 Majors</a></li>
+            <li><a href="#">🌍 Nationalities</a></li>
+            <li><a href="#">📅 Years</a></li>
+            <li><a href="#">📊 Grades</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>University Analytics Dashboard</h1>
+            <p>Comprehensive insights into student performance across all courses and demographics</p>
+        </div>
+
+        <div class="stats-cards">
+            <div class="stat-card">
+                <div class="label">Total Students</div>
+                <div class="number">1,247</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Average GPA</div>
+                <div class="number">3.24</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Courses</div>
+                <div class="number">42</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Countries</div>
+                <div class="number">28</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3>Grade Distribution</h3>
+                <div class="chart-container">
+                    <canvas id="gradeDistributionChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <h3>Enrollment by Major</h3>
+                <div class="chart-container">
+                    <canvas id="majorEnrollmentChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <h3>Students by Country</h3>
+                <div class="chart-container">
+                    <canvas id="countryDistributionChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <h3>Performance by Year</h3>
+                <div class="chart-container">
+                    <canvas id="yearPerformanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data - in a real app, this would come from your JSON file
+        const sampleData = {
+            students: [
+                // Engineering Students
+                { id: "S001", name: "Alex Johnson", major: "Engineering", year: "Sophomore", country: "USA", overall: 88.6, gpa: 3.3 },
+                { id: "S002", name: "Michael Chen", major: "Engineering", year: "Junior", country: "China", overall: 92.1, gpa: 3.7 },
+                { id: "S003", name: "Sarah Williams", major: "Engineering", year: "Senior", country: "Canada", overall: 85.4, gpa: 3.0 },
+                { id: "S004", name: "David Kim", major: "Engineering", year: "Freshman", country: "South Korea", overall: 78.9, gpa: 2.7 },
+                { id: "S005", name: "Emma Davis", major: "Engineering", year: "Sophomore", country: "UK", overall: 91.2, gpa: 3.6 },
+                
+                // Business Students
+                { id: "S006", name: "Priya Mehta", major: "Business", year: "Senior", country: "India", overall: 92.2, gpa: 3.7 },
+                { id: "S007", name: "James Wilson", major: "Business", year: "Junior", country: "Australia", overall: 87.5, gpa: 3.2 },
+                { id: "S008", name: "Maria Garcia", major: "Business", year: "Senior", country: "Spain", overall: 89.8, gpa: 3.4 },
+                { id: "S009", name: "Ahmed Hassan", major: "Business", year: "Freshman", country: "Egypt", overall: 82.3, gpa: 2.9 },
+                { id: "S010", name: "Sophie Martin", major: "Business", year: "Sophomore", country: "France", overall: 94.1, gpa: 3.9 },
+                
+                // Computer Science Students
+                { id: "S011", name: "Ryan Taylor", major: "Computer Science", year: "Junior", country: "USA", overall: 95.7, gpa: 4.0 },
+                { id: "S012", name: "Yuki Tanaka", major: "Computer Science", year: "Senior", country: "Japan", overall: 88.9, gpa: 3.3 },
+                { id: "S013", name: "Liam Brown", major: "Computer Science", year: "Freshman", country: "Canada", overall: 84.2, gpa: 3.0 },
+                { id: "S014", name: "Olivia Smith", major: "Computer Science", year: "Sophomore", country: "USA", overall: 90.5, gpa: 3.5 },
+                { id: "S015", name: "Noah Lee", major: "Computer Science", year: "Junior", country: "Singapore", overall: 93.8, gpa: 3.8 },
+                
+                // Biology Students
+                { id: "S016", name: "Isabella Rodriguez", major: "Biology", year: "Senior", country: "Mexico", overall: 86.7, gpa: 3.1 },
+                { id: "S017", name: "Ethan Clark", major: "Biology", year: "Junior", country: "USA", overall: 89.3, gpa: 3.4 },
+                { id: "S018", name: "Ava Lewis", major: "Biology", year: "Freshman", country: "Brazil", overall: 81.9, gpa: 2.8 },
+                { id: "S019", name: "Mason Walker", major: "Biology", year: "Sophomore", country: "Germany", overall: 92.6, gpa: 3.7 },
+                { id: "S020", name: "Mia Hall", major: "Biology", year: "Senior", country: "Italy", overall: 87.1, gpa: 3.2 }
+            ]
+        };
+
+        // Grade Distribution Chart
+        function createGradeDistributionChart() {
+            const gradeBuckets = { A: 0, B: 0, C: 0, D: 0, F: 0 };
+            sampleData.students.forEach(s => {
+                if (s.overall >= 90) gradeBuckets.A++;
+                else if (s.overall >= 80) gradeBuckets.B++;
+                else if (s.overall >= 70) gradeBuckets.C++;
+                else if (s.overall >= 60) gradeBuckets.D++;
+                else gradeBuckets.F++;
+            });
+
+            const ctx = document.getElementById('gradeDistributionChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(gradeBuckets),
+                    datasets: [{
+                        data: Object.values(gradeBuckets),
+                        backgroundColor: [
+                            '#10B981', // A - Emerald
+                            '#3B82F6', // B - Blue
+                            '#F59E0B', // C - Amber
+                            '#F97316', // D - Orange
+                            '#EF4444'  // F - Red
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Major Enrollment Chart
+        function createMajorEnrollmentChart() {
+            const majorCount = {};
+            sampleData.students.forEach(s => {
+                majorCount[s.major] = (majorCount[s.major] || 0) + 1;
+            });
+
+            const ctx = document.getElementById('majorEnrollmentChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(majorCount),
+                    datasets: [{
+                        label: 'Number of Students',
+                        data: Object.values(majorCount),
+                        backgroundColor: [
+                            'rgba(139, 92, 246, 0.8)', // Violet
+                            'rgba(236, 72, 153, 0.8)', // Pink
+                            'rgba(59, 130, 246, 0.8)', // Blue
+                            'rgba(16, 185, 129, 0.8)'  // Emerald
+                        ],
+                        borderRadius: 8,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Country Distribution Chart
+        function createCountryDistributionChart() {
+            const countryCount = {};
+            sampleData.students.forEach(s => {
+                countryCount[s.country] = (countryCount[s.country] || 0) + 1;
+            });
+
+            // Get top 6 countries, group rest as "Others"
+            const sortedCountries = Object.entries(countryCount)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 6);
+            
+            const otherCount = Object.entries(countryCount)
+                .slice(6)
+                .reduce((sum, [, count]) => sum + count, 0);
+            
+            if (otherCount > 0) {
+                sortedCountries.push(['Others', otherCount]);
+            }
+
+            const ctx = document.getElementById('countryDistributionChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: sortedCountries.map(([country]) => country),
+                    datasets: [{
+                        data: sortedCountries.map(([, count]) => count),
+                        backgroundColor: [
+                            '#8B5CF6', // Violet
+                            '#06B6D4', // Cyan
+                            '#10B981', // Emerald
+                            '#F59E0B', // Amber
+                            '#EF4444', // Red
+                            '#8B5CF6', // Violet (for others)
+                            '#6366F1'  // Indigo
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+        }
+
+        // Year Performance Chart
+        function createYearPerformanceChart() {
+            const yearPerformance = {
+                Freshman: { count: 0, total: 0 },
+                Sophomore: { count: 0, total: 0 },
+                Junior: { count: 0, total: 0 },
+                Senior: { count: 0, total: 0 }
+            };
+
+            sampleData.students.forEach(s => {
+                yearPerformance[s.year].count++;
+                yearPerformance[s.year].total += s.overall;
+            });
+
+            const avgPerformance = Object.keys(yearPerformance).map(year => {
+                const { count, total } = yearPerformance[year];
+                return count > 0 ? Math.round((total / count) * 10) / 10 : 0;
+            });
+
+            const ctx = document.getElementById('yearPerformanceChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Freshman', 'Sophomore', 'Junior', 'Senior'],
+                    datasets: [{
+                        label: 'Average Overall Grade',
+                        data: avgPerformance,
+                        borderColor: '#8B5CF6',
+                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#8B5CF6',
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 70,
+                            max: 100,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize all charts
+        document.addEventListener('DOMContentLoaded', () => {
+            createGradeDistributionChart();
+            createMajorEnrollmentChart();
+            createCountryDistributionChart();
+            createYearPerformanceChart();
+        });
+    </script>
+</body>
+</html>
